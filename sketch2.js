@@ -75,7 +75,7 @@ function draw() {
 
       if (brightnessValue > threshold) {
         let sx = x * cellsz + 80;
-        let sy = y * cellsz + outputBarHeight;
+        let sy = y * cellsz + outputBarHeight + 80;
         let sz = map(brightnessValue, threshold, 255, 20, 160); // circle size scales up
         fill(sz, sz, 0); // soft yellow, low alpha
         ellipse(sx, sy, cellsz + sz, cellsz + sz);

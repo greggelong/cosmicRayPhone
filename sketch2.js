@@ -76,7 +76,7 @@ function draw() {
         let sy = y * cellsz + outputBarHeight;
         let sz = map(brightnessValue, threshold, 255, cellsz, 60); // circle size scales up
         fill(sz, sz, 0); // soft yellow, low alpha
-        ellipse(sx, sy, 100, 100);
+        ellipse(sx, sy, cellsz + sz, cellsz + sz);
         hitcount++;
       }
     }

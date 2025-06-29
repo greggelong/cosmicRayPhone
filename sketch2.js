@@ -4,7 +4,7 @@ let threshold = 55;
 let hitcount = 0;
 let brightest = 0;
 let gotVideoSize = false;
-let outputBarHeight = 40;
+let outputBarHeight = 100;
 let startTime;
 
 function setup() {
@@ -25,7 +25,7 @@ function setup() {
   video.hide();
 
   textFont("monospace");
-  textSize(16);
+  textSize(46);
   stroke(255, 0, 0);
   startTime = millis();
 }

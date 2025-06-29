@@ -16,8 +16,6 @@ function setup() {
   let constraints = {
     video: {
       facingMode: { exact: "environment" },
-      width: { ideal: 480 },
-      height: { ideal: 720 },
     },
     audio: false,
   };

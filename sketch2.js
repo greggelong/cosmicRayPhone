@@ -22,7 +22,7 @@ function setup() {
   //video = createCapture(VIDEO);
   video = createCapture(constraints);
   video.size(480, 640);
-  cellsz = width / video.width - 160;
+  cellsz = width / (video.width - 160);
   video.hide();
   textFont("monospace");
   textSize(26);

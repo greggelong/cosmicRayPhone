@@ -56,9 +56,9 @@ function draw() {
   rect(0, 0, width, outputBarHeight);
   fill(255);
   textAlign(LEFT, CENTER);
-  text("Hits: " + hitcount, 10, outputBarHeight / 2);
-  text("Rate: " + hitsPerMinute.toFixed(1) + " /min", 140, outputBarHeight / 2);
-  text("Brightest: " + brightest.toFixed(1), 300, outputBarHeight / 2);
+  text("Ht: " + hitcount, 10, outputBarHeight / 2);
+  text("Rt: " + hitsPerMinute.toFixed(1) + " /min", 140, outputBarHeight / 2);
+  text("Br: " + brightest.toFixed(1), 300, outputBarHeight / 2);
 
   // Loop through video pixels
   for (let y = 0; y < video.height; y++) {

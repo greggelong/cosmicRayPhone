@@ -6,6 +6,7 @@ let brightest = 0;
 let gotVideoSize = false;
 let outputBarHeight = 40;
 let startTime;
+let offsetX, offsetY;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -19,10 +20,17 @@ function setup() {
     },
     audio: false,
   };
-  //video = createCapture(VIDEO);
+
   video = createCapture(constraints);
-  video.size(480, 640);
-  cellsz = width / (video.width - 160);
+  video.size(480, 640); // fixed size
+  cellsz = width / (video.width - 160); // initial guess
+
+  // Calculate grid centering
+  let gridW = video.width * cellsz;
+  let gridH = video.height * cellsz;
+  offsetX = (width - gridW) / 2;
+  offsetY = (height - gridH) / 2 + outputBarHeight;
+
   video.hide();
   textFont("monospace");
   textSize(26);
@@ -31,19 +39,6 @@ function setup() {
 }
 
 function draw() {
-  //   if (!video.loadedmetadata) return;
-
-  //   // Calculate square cell size once
-  //   if (!gotVideoSize) {
-  //     cellsz = min(
-  //       width / video.width,
-  //       (height - outputBarHeight) / video.height
-  //     );
-  //     console.log("Video size:", video.width, video.height);
-  //     console.log("Cell size:", cellsz);
-  //     gotVideoSize = true;
-  //   }
-
   video.loadPixels();
 
   // Calculate hits per minute
@@ -58,7 +53,12 @@ function draw() {
   text("Ht: " + hitcount, 10, outputBarHeight / 2);
   text("Rt: " + hitsPerMinute.toFixed(1) + "/m", 180, outputBarHeight / 2);
   text("Br: " + brightest.toFixed(1), 420, outputBarHeight / 2);
-  //text(video.width + " " + video.height, 520, outputBarHeight / 2);
+
+  // Draw grid border
+  noFill();
+  stroke(0, 0, 255); // blue
+  strokeWeight(2);
+  rect(offsetX, offsetY, video.width * cellsz, video.height * cellsz);
 
   // Loop through video pixels
   for (let y = 0; y < video.height; y++) {
@@ -74,10 +74,13 @@ function draw() {
       }
 
       if (brightnessValue > threshold) {
-        let sx = x * cellsz + 80; // move it from the sides
-        let sy = y * cellsz + outputBarHeight + 80; //move it from the top
-        let sz = map(brightnessValue, threshold, 255, 20, 160); // circle size scales up
-        fill(sz, sz, 0); // soft yellow, low alpha
+        let sx = x * cellsz + offsetX;
+        let sy = y * cellsz + offsetY;
+        let sz = map(brightnessValue, threshold, 255, 20, 160);
+
+        stroke(255);
+        strokeWeight(1);
+        fill(sz, sz, 0, 180); // translucent yellow
         ellipse(sx, sy, cellsz + sz, cellsz + sz);
         hitcount++;
       }

@@ -25,7 +25,7 @@ function setup() {
   video.hide();
 
   textFont("monospace");
-  textSize(46);
+  textSize(26);
   stroke(255, 0, 0);
   startTime = millis();
 }

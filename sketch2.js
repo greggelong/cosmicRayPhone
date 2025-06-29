@@ -3,10 +3,11 @@ let threshold = 15;
 let hitcount = 0;
 let lastHitCount = 0;
 let hitRate = 0;
-let outputBarHeight = 40;
 let brightest = 0;
+let outputBarHeight = 40;
 
-// Portrait camera constraints
+let cellW, cellH; // will be set after video loads
+
 let constraints = {
   audio: false,
   video: {
@@ -22,12 +23,13 @@ function setup() {
 
   video = createCapture(VIDEO, constraints, () => {
     console.log("Camera ready:", video.width, video.height);
+    cellW = width / video.width;
+    cellH = (height - outputBarHeight) / video.height;
   });
 
   video.hide();
   background(0);
 
-  // Update hit rate once per second
   setInterval(() => {
     hitRate = hitcount - lastHitCount;
     lastHitCount = hitcount;
@@ -37,10 +39,11 @@ function setup() {
 }
 
 function draw() {
-  if (!video.loadedmetadata) return;
+  if (!video.loadedmetadata || !cellW || !cellH) return;
+
   video.loadPixels();
 
-  // Draw HUD bar at the top
+  // Draw HUD bar
   fill(0);
   noStroke();
   rect(0, 0, width, outputBarHeight);
@@ -50,9 +53,8 @@ function draw() {
   textAlign(LEFT, CENTER);
   text("Hits: " + hitcount, 10, outputBarHeight / 2);
   text("Rate: " + hitRate + " /sec", 140, outputBarHeight / 2);
-  text("Brightest: " + brightest.toFixed(1), 280, outputBarHeight / 2);
+  text("Brightest: " + brightest.toFixed(1), 300, outputBarHeight / 2);
 
-  // Loop through camera pixels
   for (let y = 0; y < video.height; y++) {
     for (let x = 0; x < video.width; x++) {
       let i = (x + y * video.width) * 4;
@@ -66,14 +68,12 @@ function draw() {
       }
 
       if (brightnessValue > threshold) {
-        // Map video coords to canvas coords
-        let sx = map(x, 0, video.width, 0, width);
-        let sy = map(y, 0, video.height, outputBarHeight, height);
-        let sz = map(brightnessValue, threshold, 255, 2, 30);
+        let sx = x * cellW;
+        let sy = y * cellH + outputBarHeight;
 
-        fill(255, 30); // faint rectangle, accumulates over time
+        fill(255, 5);
         noStroke();
-        rect(sx, sy, sz, sz);
+        rect(sx, sy, cellW, cellH);
 
         hitcount++;
       }

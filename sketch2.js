@@ -21,7 +21,8 @@ function setup() {
     },
     audio: false,
   };
-  video = createCapture(constraints);
+  //video = createCapture(constraints);
+  video = createCapture(VIDEO);
   video.hide();
 
   textFont("monospace");
@@ -78,7 +79,7 @@ function draw() {
         let sy = y * cellsz + outputBarHeight;
         let sz = map(brightnessValue, threshold, 255, cellsz, cellsz * 4); // circle size scales up
         fill(255, 255, 0, 10); // soft yellow, low alpha
-        noStroke();
+        stroke(255, 0, 0);
         ellipse(sx, sy, sz, sz);
         hitcount++;
       }

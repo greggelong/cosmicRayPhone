@@ -19,8 +19,10 @@ function setup() {
     },
     audio: false,
   };
+  video = createCapture(VIDEO);
   //video = createCapture(constraints);
-  video = createCapture(constraints);
+  video.size(480, 640);
+  cellsz = width / video.width;
   video.hide();
   textFont("monospace");
   textSize(26);
@@ -29,18 +31,18 @@ function setup() {
 }
 
 function draw() {
-  if (!video.loadedmetadata) return;
+  //   if (!video.loadedmetadata) return;
 
-  // Calculate square cell size once
-  if (!gotVideoSize) {
-    cellsz = min(
-      width / video.width,
-      (height - outputBarHeight) / video.height
-    );
-    console.log("Video size:", video.width, video.height);
-    console.log("Cell size:", cellsz);
-    gotVideoSize = true;
-  }
+  //   // Calculate square cell size once
+  //   if (!gotVideoSize) {
+  //     cellsz = min(
+  //       width / video.width,
+  //       (height - outputBarHeight) / video.height
+  //     );
+  //     console.log("Video size:", video.width, video.height);
+  //     console.log("Cell size:", cellsz);
+  //     gotVideoSize = true;
+  //   }
 
   video.loadPixels();
 
@@ -56,7 +58,7 @@ function draw() {
   text("Ht: " + hitcount, 10, outputBarHeight / 2);
   text("Rt: " + hitsPerMinute.toFixed(1) + "/m", 180, outputBarHeight / 2);
   text("Br: " + brightest.toFixed(1), 420, outputBarHeight / 2);
-  text(video.width + " " + video.height, 500, outputBarHeight / 2);
+  text(video.width + " " + video.height, 520, outputBarHeight / 2);
 
   // Loop through video pixels
   for (let y = 0; y < video.height; y++) {

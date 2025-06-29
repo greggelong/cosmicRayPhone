@@ -3,50 +3,59 @@ let cellsz;
 let threshold = 15;
 let hitcount = 0;
 let brightest = 0;
-let gotVideoSize = false;
 let outputBarHeight = 40;
 let startTime;
+
+let activeW, activeH;
 let offsetX, offsetY;
+
+// Mobile-friendly constraints: rear camera, portrait aspect
+let constraints = {
+  video: {
+    facingMode: { exact: "environment" },
+    width: { ideal: 480 },
+    height: { ideal: 640 },
+  },
+  audio: false,
+};
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   pixelDensity(1);
   background(0);
-
-  // Request portrait aspect ratio for mobile
-  let constraints = {
-    video: {
-      facingMode: { exact: "environment" },
-    },
-    audio: false,
-  };
-
-  video = createCapture(constraints);
-  video.size(480, 640); // fixed size
-  cellsz = width / (video.width - 160); // initial guess
-
-  // Calculate grid centering
-  let gridW = video.width * cellsz;
-  let gridH = video.height * cellsz;
-  offsetX = (width - gridW) / 2;
-  offsetY = (height - gridH) / 2 + outputBarHeight;
-
-  video.hide();
   textFont("monospace");
   textSize(26);
   stroke(255, 0, 0);
+
+  video = createCapture(constraints, () => {
+    console.log("Camera initialized.");
+  });
+  video.size(480, 640); // Force known size for layout
+  video.hide();
+
+  // Set the active area size and offsets (centered)
+  activeW = width - 160;
+  activeH = height - 160;
+  offsetX = (width - activeW) / 2;
+  offsetY = (height - activeH) / 2 + outputBarHeight;
+
+  // Calculate square cell size
+  cellsz = min(activeW / video.width, activeH / video.height);
+
   startTime = millis();
 }
 
 function draw() {
+  if (!video.loadedmetadata) return;
+
   video.loadPixels();
 
-  // Calculate hits per minute
   let elapsedMinutes = (millis() - startTime) / 60000;
   let hitsPerMinute = hitcount / elapsedMinutes;
 
-  // Draw HUD bar
+  // Draw HUD
   fill(0);
+  noStroke();
   rect(0, 0, width, outputBarHeight);
   fill(255);
   textAlign(LEFT, CENTER);
@@ -54,13 +63,13 @@ function draw() {
   text("Rt: " + hitsPerMinute.toFixed(1) + "/m", 180, outputBarHeight / 2);
   text("Br: " + brightest.toFixed(1), 420, outputBarHeight / 2);
 
-  // Draw grid border
+  // Draw blue border around active area
   noFill();
-  stroke(0, 0, 255); // blue
+  stroke(0, 0, 255);
   strokeWeight(2);
   rect(offsetX, offsetY, video.width * cellsz, video.height * cellsz);
 
-  // Loop through video pixels
+  // Loop through pixels
   for (let y = 0; y < video.height; y++) {
     for (let x = 0; x < video.width; x++) {
       let i = (x + y * video.width) * 4;
@@ -80,7 +89,7 @@ function draw() {
 
         stroke(255);
         strokeWeight(1);
-        fill(sz, sz, 0, 180); // translucent yellow
+        fill(sz, sz, 0, 180);
         ellipse(sx, sy, cellsz + sz, cellsz + sz);
         hitcount++;
       }

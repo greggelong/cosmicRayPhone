@@ -1,6 +1,6 @@
 let video;
 let cellsz;
-let threshold = 15;
+let threshold = 35;
 let hitcount = 0;
 let brightest = 0;
 let gotVideoSize = false;
@@ -22,7 +22,7 @@ function setup() {
     audio: false,
   };
   //video = createCapture(constraints);
-  video = createCapture(VIDEO);
+  video = createCapture(VIDEO, constraints);
   video.hide();
 
   textFont("monospace");
@@ -58,8 +58,8 @@ function draw() {
   fill(255);
   textAlign(LEFT, CENTER);
   text("Ht: " + hitcount, 10, outputBarHeight / 2);
-  text("Rt: " + hitsPerMinute.toFixed(1) + " /min", 140, outputBarHeight / 2);
-  text("Br: " + brightest.toFixed(1), 300, outputBarHeight / 2);
+  text("Rt: " + hitsPerMinute.toFixed(1) + "/m", 180, outputBarHeight / 2);
+  text("Br: " + brightest.toFixed(1), 420, outputBarHeight / 2);
 
   // Loop through video pixels
   for (let y = 0; y < video.height; y++) {
@@ -77,7 +77,7 @@ function draw() {
       if (brightnessValue > threshold) {
         let sx = x * cellsz;
         let sy = y * cellsz + outputBarHeight;
-        let sz = map(brightnessValue, threshold, 255, cellsz, cellsz * 4); // circle size scales up
+        let sz = map(brightnessValue, threshold, 255, cellsz, 60); // circle size scales up
         fill(255, 255, 0, 10); // soft yellow, low alpha
         stroke(255, 0, 0);
         ellipse(sx, sy, sz, sz);

@@ -4,7 +4,7 @@ let threshold = 15;
 let hitcount = 0;
 let brightest = 0;
 let gotVideoSize = false;
-let outputBarHeight = 100;
+let outputBarHeight = 40;
 let startTime;
 
 function setup() {
@@ -22,9 +22,8 @@ function setup() {
     audio: false,
   };
   //video = createCapture(constraints);
-  video = createCapture(VIDEO, constraints);
+  video = createCapture(constraints);
   video.hide();
-
   textFont("monospace");
   textSize(26);
   stroke(255, 0, 0);
@@ -53,7 +52,6 @@ function draw() {
 
   // Draw HUD bar
   fill(0);
-  noStroke();
   rect(0, 0, width, outputBarHeight);
   fill(255);
   textAlign(LEFT, CENTER);
@@ -78,8 +76,7 @@ function draw() {
         let sx = x * cellsz;
         let sy = y * cellsz + outputBarHeight;
         let sz = map(brightnessValue, threshold, 255, cellsz, 60); // circle size scales up
-        fill(255, 255, 0, 10); // soft yellow, low alpha
-        stroke(255, 0, 0);
+        fill(sz, sz, 0); // soft yellow, low alpha
         ellipse(sx, sy, sz, sz);
         hitcount++;
       }

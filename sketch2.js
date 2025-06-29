@@ -87,9 +87,9 @@ function draw() {
         let sy = y * cellsz + offsetY;
         let sz = map(brightnessValue, threshold, 255, 20, 160);
 
-        stroke(255);
+        stroke(255, 0, 0);
         strokeWeight(1);
-        fill(sz, sz, 0, 180);
+        fill(255, 255, 0, sz);
         ellipse(sx, sy, cellsz + sz, cellsz + sz);
         hitcount++;
       }

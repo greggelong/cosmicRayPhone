@@ -19,8 +19,8 @@ function setup() {
     },
     audio: false,
   };
-  video = createCapture(VIDEO);
-  //video = createCapture(constraints);
+  //video = createCapture(VIDEO);
+  video = createCapture(constraints);
   video.size(480, 640);
   cellsz = width / video.width;
   video.hide();

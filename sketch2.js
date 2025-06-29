@@ -22,7 +22,7 @@ function setup() {
   //video = createCapture(VIDEO);
   video = createCapture(constraints);
   video.size(480, 640);
-  cellsz = width / video.width;
+  cellsz = width / video.width - 160;
   video.hide();
   textFont("monospace");
   textSize(26);
@@ -74,7 +74,7 @@ function draw() {
       }
 
       if (brightnessValue > threshold) {
-        let sx = x * cellsz;
+        let sx = x * cellsz + 80;
         let sy = y * cellsz + outputBarHeight;
         let sz = map(brightnessValue, threshold, 255, 20, 160); // circle size scales up
         fill(sz, sz, 0); // soft yellow, low alpha
